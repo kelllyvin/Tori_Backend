@@ -36,7 +36,7 @@ const userSchema = new Schema(
       minlength: [6, "minimum password length is 6"],
       required: [true, "password is required"],
     },
-    isVerfied: {
+    isVerified: {
       type: Boolean,
       default: false,
     },
