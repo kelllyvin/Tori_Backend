@@ -4,6 +4,8 @@ const app = express();
 const mongoose = require("mongoose");
 const PORT = process.env.port || 3000;
 const userRouter = require("./routes/userRouter");
+// middleware
+app.use(express)
 
 // middleware
 app.use(express.json());
