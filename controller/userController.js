@@ -3,6 +3,7 @@ const USER = require("../models/user")
 const bcrypt = require('bcryptjs')
 const generateToken = require("../helpers/generatetoken")
 const {sendWelcomeEmail} = require ('../email/sendEmail')
+const jwt = require("jsonwebtoken")
 
 const handleRegister = async (req, res) =>{
     const {fullName, email, password, phoneNumber, role} = req.body
@@ -108,7 +109,7 @@ const handelLogin = async(req, res) =>{
       return res.status(403).json ({message:"Access Denied for This role"})
     }
     if(!user.isVerified){
-      return res.ststus(403).json ({message: "Email is NOt Verified, Check your mail "})
+      return res.status(403).json ({message: "Email is NOt Verified, Check your mail "})
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password)
 
@@ -116,8 +117,12 @@ const handelLogin = async(req, res) =>{
       return res.json(401).json({message: " invalid email  or password"})
     }
     
-    // generate a token
-    return res.ststus(200).json({sucess: true, user:{
+    // generate a token ( token always has validity and expired period)
+
+    const token = jwt.sign({email:user.email, role: user.role}, process.env.JET_SECRET, {expiresIn: " 3 days"})
+
+
+    return res.ststus(200).json({sucess: true,  token, user:{
       fullName: user.fullName,
       email: user.email,
       role: user.role,
