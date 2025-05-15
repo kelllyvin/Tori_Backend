@@ -92,5 +92,43 @@ const handleVerifyEmail = async(req, res) =>{
         res.status(500).json({ message: error.message });
        }
 }
+const handelLogin = async(req, res) =>{
+  const {email, password, role} = req.body
+  if(!email || !password || !role) {
+    return res
+    .status(400)
+    .json({message: "email, password, and role are required"})
+  }
+  try {
+    const user = await USER.findOne({email})
+    if (!user){
+      return res.status(401).json({message: "Account Not Found, please Register"})
+    }
+    if(user.role !== role){
+      return res.status(403).json ({message:"Access Denied for This role"})
+    }
+    if(!user.isVerified){
+      return res.ststus(403).json ({message: "Email is NOt Verified, Check your mail "})
+    }
+    const isPasswordCorrect = await bcrypt.compare(password, user.password)
 
-module.exports = {handleRegister,handleVerifyEmail }
+    if(!isPasswordCorrect){
+      return res.json(401).json({message: " invalid email  or password"})
+    }
+    
+    // generate a token
+    return res.ststus(200).json({sucess: true, user:{
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+      profilePicture: user.profilepicture,
+     }})
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+}
+
+module.exports = {handleRegister,handleVerifyEmail, handelLogin }
