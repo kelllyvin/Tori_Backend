@@ -119,7 +119,7 @@ const handelLogin = async(req, res) =>{
     
     // generate a token ( token always has validity and expired period)
 
-    const token = jwt.sign({email:user.email, role: user.role}, process.env.JWT_SECRET, {expiresIn: " 3 days"})
+    const token = jwt.sign({email:user.email, role: user.role}, process.env.JWT_SECRET, {expireIn: " 3 days"})
 
 
     return res.ststus(200).json({sucess: true,  token, user:{
