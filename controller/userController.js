@@ -42,7 +42,7 @@ const handleRegister = async (req, res) =>{
 
     // send an email
 
-  const clientUrl = `${process.env.FRONTEND-URL}/verify-email/${verificationToken}`
+  const clientUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`
 
   await sendWelcomeEmail({email: user.email,
     fullName: user.fullName,
